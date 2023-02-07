@@ -100,23 +100,23 @@ impl ScanSectorUi {
 
 impl eframe::App for ScanSectorUi {
     fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
-        egui::gui_zoom::zoom_with_keyboard_shortcuts(
-            ctx,
-            frame.info().native_pixels_per_point,
-        );
+        egui::gui_zoom::zoom_with_keyboard_shortcuts(ctx, frame.info().native_pixels_per_point);
 
         egui::TopBottomPanel::top("footer").show(ctx, |ui| {
             ui.horizontal(|ui| {
                 ui.menu_button("View", |ui| {
-                    egui::gui_zoom::zoom_menu_buttons(
-                        ui,
-                        frame.info().native_pixels_per_point,
-                    );
+                    egui::gui_zoom::zoom_menu_buttons(ui, frame.info().native_pixels_per_point);
 
                     egui::widgets::global_dark_light_mode_buttons(ui);
                 });
 
-                if let Some(jh) = self.pick_file.take() {
+                if self
+                    .pick_file
+                    .as_ref()
+                    .map(|t| t.is_finished())
+                    .unwrap_or(false)
+                {
+                    let jh = self.pick_file.take().unwrap();
                     self.save = jh.join().unwrap();
 
                     if let Some(path) = &self.save {
@@ -160,12 +160,17 @@ impl eframe::App for ScanSectorUi {
                         ui.label("Filter");
                         ui.text_edit_singleline(&mut self.filter);
 
-                        ComboBox::from_id_source("_star_system_select").width(ui.available_width())
+                        ComboBox::from_id_source("_star_system_select")
+                            .width(ui.available_width())
                             .selected_text(self.systems[self.selected].name.clone())
                             .show_ui(ui, |ui| {
                                 for (index, system) in self.systems.iter().enumerate() {
                                     if system.name.contains(&self.filter) {
-                                        ui.selectable_value(&mut self.selected, index, &system.name);
+                                        ui.selectable_value(
+                                            &mut self.selected,
+                                            index,
+                                            &system.name,
+                                        );
                                     }
                                 }
                             });
@@ -186,8 +191,20 @@ fn render_system(ui: &mut Ui, system: &System) {
         return;
     }
 
-    let bounds_x = system.objects.iter().map(|s| s.pos.x.abs()).reduce(f64::max).unwrap() + 2000.0;
-    let bounds_y = system.objects.iter().map(|s| s.pos.y.abs()).reduce(f64::max).unwrap() + 2000.0;
+    let bounds_x = system
+        .objects
+        .iter()
+        .map(|s| s.pos.x.abs())
+        .reduce(f64::max)
+        .unwrap()
+        + 2000.0;
+    let bounds_y = system
+        .objects
+        .iter()
+        .map(|s| s.pos.y.abs())
+        .reduce(f64::max)
+        .unwrap()
+        + 2000.0;
 
     use eframe::egui::plot::{Legend, MarkerShape, Plot, Points};
     let plot = Plot::new("system_display")
