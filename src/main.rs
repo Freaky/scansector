@@ -250,5 +250,5 @@ fn main() {
         "Scansector - Starsector System Scanner",
         native_options,
         Box::new(|cc| Box::new(ScanSectorUi::new(cc))),
-    );
+    ).unwrap();
 }
