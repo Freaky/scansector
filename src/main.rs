@@ -165,7 +165,11 @@ impl eframe::App for ScanSectorUi {
                             .selected_text(self.systems[self.selected].name.clone())
                             .show_ui(ui, |ui| {
                                 for (index, system) in self.systems.iter().enumerate() {
-                                    if system.name.contains(&self.filter) {
+                                    if system
+                                        .name
+                                        .to_lowercase()
+                                        .contains(&self.filter.to_lowercase())
+                                    {
                                         ui.selectable_value(
                                             &mut self.selected,
                                             index,
