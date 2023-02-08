@@ -6,7 +6,6 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-coordinates = "0.3.1"
 eframe = { version = "0.21", features = ["persistence"] }
 json = "0.12.4"
 rfd = "0.11.0"

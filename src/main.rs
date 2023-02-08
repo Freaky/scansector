@@ -1,19 +1,22 @@
 use std::path::{Path, PathBuf};
 use std::thread::JoinHandle;
 
-use coordinates::traits::*;
-use coordinates::two_dimensional::Vector2;
-use eframe::egui::plot::PlotBounds;
-use eframe::egui::{self, RichText};
-use egui::plot::{PlotPoint, Text};
+use eframe::egui;
+use egui::plot::{Text, PlotPoint};
 use egui::{ComboBox, Ui};
 use roxmltree::Node;
+
+#[derive(Debug, Clone, Copy)]
+struct Position {
+    x: f64,
+    y: f64,
+}
 
 #[derive(Clone, Debug)]
 struct Object {
     name: String,
     planet: bool,
-    pos: Vector2<f64>,
+    pos: Position,
     mission: bool,
 }
 
@@ -53,11 +56,11 @@ fn load_save(path: &Path) -> std::io::Result<Vec<System>> {
     Ok(systems)
 }
 
-fn parse_vector(v: &str) -> Option<Vector2<f64>> {
+fn parse_vector(v: &str) -> Option<Position> {
     let mut split = v.split(|b| b == '|');
     let x = split.next()?.parse().ok()?;
     let y = split.next()?.parse().ok()?;
-    Some(Vector2 { x, y })
+    Some(Position { x, y })
 }
 
 fn extract_object(node: &Node) -> Option<Object> {

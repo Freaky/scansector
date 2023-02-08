@@ -510,16 +510,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "coordinates"
-version = "0.3.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8cb832df8777bce34879b8b92c55f492c4be377646ef93f16b9b58f3cf5e9bdb"
-dependencies = [
- "num-traits",
- "roots",
-]
-
-[[package]]
 name = "core-foundation"
 version = "0.9.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1424,15 +1414,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "num-traits"
-version = "0.2.15"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "578ede34cf02f8924ab9447f50c28075b4d3e5b269972345e7e0372b38c6cdcd"
-dependencies = [
- "autocfg",
-]
-
-[[package]]
 name = "num_enum"
 version = "0.5.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1805,12 +1786,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "roots"
-version = "0.0.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1c36d2bbc763f480668d6d6790ae2fdd2e52ac0c21a3a26d156f3534a3d9eea9"
-
-[[package]]
 name = "roxmltree"
 version = "0.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1832,7 +1807,6 @@ dependencies = [
 name = "scansector"
 version = "0.1.0"
 dependencies = [
- "coordinates",
  "eframe",
  "json",
  "rfd",
