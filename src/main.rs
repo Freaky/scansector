@@ -25,6 +25,7 @@ struct System {
     name: String,
     lc_name: String,
     objects: Vec<Object>,
+    mission: bool,
 }
 
 fn load_save(path: &Path) -> std::io::Result<Vec<System>> {
@@ -38,6 +39,7 @@ fn load_save(path: &Path) -> std::io::Result<Vec<System>> {
             name: name.to_string(),
             lc_name: name.to_lowercase(),
             objects: vec![],
+            mission: false,
         };
 
         for planet in sys.descendants().filter(|n| n.tag_name().name() == "Plnt") {
@@ -50,6 +52,7 @@ fn load_save(path: &Path) -> std::io::Result<Vec<System>> {
             let Some(ent) = extract_object(&ent) else { continue };
             system.objects.push(ent);
         }
+        system.mission = system.objects.iter().any(|ent| ent.mission);
         systems.push(system);
     }
 
@@ -95,6 +98,7 @@ struct ScanSectorUi {
     systems: Vec<System>,
     filter: String,
     lc_filter: String,
+    mission_only: bool,
     selected: usize,
 }
 
@@ -178,12 +182,14 @@ impl eframe::App for ScanSectorUi {
                             }
                         }
 
+                        ui.checkbox(&mut self.mission_only, "Mission Only");
+
                         ComboBox::from_id_source("_star_system_select")
                             .width(ui.available_width())
                             .selected_text(self.systems[self.selected].name.clone())
                             .show_ui(ui, |ui| {
                                 for (index, system) in self.systems.iter().enumerate() {
-                                    if system.lc_name.contains(&self.lc_filter) {
+                                    if (!self.mission_only || system.mission) && system.lc_name.contains(&self.lc_filter) {
                                         ui.selectable_value(
                                             &mut self.selected,
                                             index,
