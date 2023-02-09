@@ -23,6 +23,7 @@ struct Object {
 #[derive(Clone, Debug)]
 struct System {
     name: String,
+    lc_name: String,
     objects: Vec<Object>,
 }
 
@@ -35,6 +36,7 @@ fn load_save(path: &Path) -> std::io::Result<Vec<System>> {
         let Some(name) = sys.attribute("bN") else { continue };
         let mut system = System {
             name: name.to_string(),
+            lc_name: name.to_lowercase(),
             objects: vec![],
         };
 
@@ -92,6 +94,7 @@ struct ScanSectorUi {
     save: Option<PathBuf>,
     systems: Vec<System>,
     filter: String,
+    lc_filter: String,
     selected: usize,
 }
 
@@ -161,18 +164,26 @@ impl eframe::App for ScanSectorUi {
                     ui.heading("Select a System");
                     ui.horizontal(|ui| {
                         ui.label("Filter");
-                        ui.text_edit_singleline(&mut self.filter);
+                        if ui.text_edit_singleline(&mut self.filter).changed() {
+                            self.lc_filter = self.filter.to_lowercase();
+                            if !self.systems[self.selected]
+                                .lc_name
+                                .contains(&self.lc_filter)
+                            {
+                                self.selected = self
+                                    .systems
+                                    .iter()
+                                    .position(|sys| sys.lc_name.contains(&self.lc_filter))
+                                    .unwrap_or(self.selected);
+                            }
+                        }
 
                         ComboBox::from_id_source("_star_system_select")
                             .width(ui.available_width())
                             .selected_text(self.systems[self.selected].name.clone())
                             .show_ui(ui, |ui| {
                                 for (index, system) in self.systems.iter().enumerate() {
-                                    if system
-                                        .name
-                                        .to_lowercase()
-                                        .contains(&self.filter.to_lowercase())
-                                    {
+                                    if system.lc_name.contains(&self.lc_filter) {
                                         ui.selectable_value(
                                             &mut self.selected,
                                             index,
