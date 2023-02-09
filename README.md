@@ -10,7 +10,8 @@ of the objects founds within that system, including stars, planets, moons, and d
 Mission-specific items are indicated by an asterisk.
 
 It's quick-and-dirty and the rendering is a bit naff, but it's good enough to make those
-\[redacted\] "in the outer reaches" missions slightly less obnoxious.
+\[redacted\] "in the outer reaches" missions slightly less obnoxious, without needing to
+resort to mods or dev mode cheats.
 
 Remember star systems are dynamic and things will move over time.  This just tells you
 where an object was when you last saved.
