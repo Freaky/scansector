@@ -2,7 +2,7 @@ use std::path::{Path, PathBuf};
 use std::thread::JoinHandle;
 
 use eframe::egui;
-use egui::plot::{Text, PlotPoint};
+use egui::plot::{PlotPoint, Text};
 use egui::{ComboBox, Ui};
 use roxmltree::Node;
 
@@ -253,5 +253,6 @@ fn main() {
         "Scansector - Starsector System Scanner",
         native_options,
         Box::new(|cc| Box::new(ScanSectorUi::new(cc))),
-    ).unwrap();
+    )
+    .unwrap();
 }
